@@ -20,7 +20,6 @@ jobs:
         # Each step must be separate, so native libraries are taken into account.
         run:  |
           gradle wrapper
-          ./gradlew fetch-native-dependencies
           ./gradlew assemble
           ./gradlew build
           ./gradlew publish --info

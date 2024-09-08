@@ -31,8 +31,5 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Fetch native dependencies
-        run: |
-          ./gradlew fetch-native-dependencies
       - name: package
         run: ./gradlew assemble --stacktrace
