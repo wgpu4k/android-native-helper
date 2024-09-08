@@ -21,6 +21,8 @@ kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
+
+        publishLibraryVariants("release", "debug")
     }
 
     targets.forEach { target ->
