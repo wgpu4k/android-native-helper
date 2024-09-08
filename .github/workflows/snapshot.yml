@@ -1,0 +1,36 @@
+name: Publish wgpu4k snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'version to publish'
+        required: false
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Build and publish with Gradle
+        # Each step must be separate, so native libraries are taken into account.
+        run:  |
+          gradle wrapper
+          ./gradlew fetch-native-dependencies
+          ./gradlew assemble
+          ./gradlew build
+          ./gradlew publish --info
+        env:
+          SNAPSHOT: "true"
+          VERSION: ${{ github.event.inputs.version }}
+          SONATYPE_LOGIN: ${{ secrets.SONATYPE_LOGIN }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.PGP_PUBLIC }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.PGP_PRIVATE }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+
