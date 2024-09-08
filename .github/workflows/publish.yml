@@ -1,0 +1,31 @@
+name: Publish wgpu4k-native
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+      - name: Build and publish with Gradle
+        run: |
+          gradle wrapper
+          ./gradlew assemble
+          ./gradlew build
+          ./gradlew publish publishToCentralPortal --info
+        env:
+          SNAPSHOT: "false"
+          VERSION: ${{ github.event.release.tag_name }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_LOGIN }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.PGP_PUBLIC }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.PGP_PRIVATE }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
