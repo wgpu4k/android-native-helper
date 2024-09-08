@@ -11,10 +11,23 @@ val libraryName = "native-helper"
 
 kotlin {
 
+    val targets = listOf(
+        androidNativeArm64(),
+        androidNativeX64()
+    )
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
+        }
+    }
+
+    targets.forEach { target ->
+        target.binaries {
+            sharedLib {
+                baseName = libraryName
+            }
         }
     }
 
