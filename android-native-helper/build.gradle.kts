@@ -29,6 +29,8 @@ kotlin {
         target.binaries {
             sharedLib {
                 baseName = libraryName
+                // Configure for 16KB page size support
+                linkerOpts("-Wl,-z,max-page-size=16384", "-Wl,-z,common-page-size=16384")
             }
         }
     }
@@ -41,7 +43,7 @@ kotlin {
 
 android {
     namespace = "io.ygdrasil.nativeHelper"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 28
